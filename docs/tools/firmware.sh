@@ -287,8 +287,8 @@ case "$os" in
 		identifier=$(system_profiler SPHardwareDataType | grep "Model Identifier" | cut -d ":" -f 2 | xargs)
 		echo -e "\nHow do you want to copy the firmware to Linux?"
 		echo -e "\n1. Run the same script on Linux."
-		echo "2. Create a tarball of the firmware and extract it to Linux."
-		echo "3. Create a Linux specific package which can be installed using a package manager."
+		echo "2. Create a tarball of the firmware and extract it within Linux."
+		echo "3. Create a Linux distribution specific package which can be installed using a package manager."
 		echo -e "\nNote: Option 2 and 3 require additional software like python3 and tools specific for your package manager. Requirements will be told as you proceed further."
 		read choice
 		case ${choice} in
@@ -300,7 +300,7 @@ case "$os" in
 				tar ${verbose} -cf "/Volumes/${EFILABEL}/firmware.tar" -C /usr/share/firmware/ .
 				gzip ${verbose} --best "/Volumes/${EFILABEL}/firmware.tar"
 				if [[ (${identifier} = iMac19,1) || (${identifier} = iMac19,2) || (${identifier} = iMacPro1,1) ]]
-		then
+				then
 					nvramfile=$(ioreg -l | grep RequestedFiles | cut -d "/" -f 5 | rev | cut -c 4- | rev)
 					txcapblob=$(ioreg -l | grep RequestedFiles | cut -d "/" -f 3 | cut -d "\"" -f 1)
 					cp ${verbose} /usr/share/firmware/wifi/C-4364__s-B2/${nvramfile} "/Volumes/${EFILABEL}/brcmfmac4364b2-pcie.txt"
@@ -314,13 +314,12 @@ case "$os" in
 				echo -e "Run the following commands or run this script itself in Linux now to set up Wi-Fi :-\n\nsudo mkdir -p /tmp/apple-wifi-efi\nsudo mount /dev/nvme0n1p1 /tmp/apple-wifi-efi\nbash /tmp/apple-wifi-efi/firmware.sh\nsudo umount /tmp/apple-wifi-efi\n"
 				;;
 			(2)
-
 				echo -e "\nChecking for missing dependencies"
 				python_check
 				echo -e "\nCreating a tarball of the firmware"
 				python3 "$0" /usr/share/firmware $HOME/Downloads/firmware.tar ${verbose}
 				if [[ (${identifier} = iMac19,1) || (${identifier} = iMac19,2) || (${identifier} = iMacPro1,1) ]]
-		then
+				then
 					nvramfile=$(ioreg -l | grep RequestedFiles | cut -d "/" -f 5 | rev | cut -c 4- | rev)
 					txcapblob=$(ioreg -l | grep RequestedFiles | cut -d "/" -f 3 | cut -d "\"" -f 1)
 					cp ${verbose} /usr/share/firmware/wifi/C-4364__s-B2/${nvramfile} "$HOME/Downloads/brcmfmac4364b2-pcie.txt"
@@ -377,7 +376,8 @@ case "$os" in
 
 	(Linux)
 		echo "Detected Linux"
-		if [[ ! -e /lib/firmware ]]; then
+		if [[ ! -e /lib/firmware ]]
+		then
 			echo "/lib/firmware does not seem to exist. This script requires that directory to function."
 			echo "If you are on some exotic distro like NixOS, please check the wiki for more information:"
 			echo "  https://wiki.t2linux.org"
