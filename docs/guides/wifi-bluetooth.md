@@ -39,6 +39,9 @@ When you run the script in macOS, it will ask you to choose between 3 methods to
 
     To retrieve the firmware from **EFI** partition in Linux, you shall have to run the same script on Linux. You have 2 options do so, described in detail in [On Linux](#on-linux) section.
 
+    !!! info
+        The firmware obtained from this method is not directly usable on Linux due to different naming conventions; you will have to run this script again in Linux to do so. To obtain a tarball containing the renamed firmware directly, see **Method 2**.
+
 === "Method 2"
     **Method 2: Create a tarball of the firmware and extract it to Linux**
 
